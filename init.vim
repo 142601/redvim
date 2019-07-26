@@ -95,7 +95,6 @@ Plug 'scrooloose/nerdcommenter'
 
 " vim-markown
 Plug 'godlygeek/tabular'
-Plug 'plasticboy/vim-markdown'
 Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app & yarn install'   }
 
 " html5
@@ -103,8 +102,8 @@ Plug 'othree/html5.vim'
 Plug 'gregsexton/MatchTag'
 
 " airline
-" Plug 'vim-airline/vim-airline'
-" Plug 'vim-airline/vim-airline-themes'
+Plug 'vim-airline/vim-airline'
+Plug 'vim-airline/vim-airline-themes'
 
 " complete
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
@@ -167,16 +166,16 @@ let g:html5_microdata_attributes_complete       = 0
 let g:html5_aria_attributes_complete            = 0
 
 " airline----------------------------- 
-" let g:airline_theme                       = "dracula"
-" let g:airline_powerline_fonts             = 1
-" let g:airline#extensions#tabline#enabled  = 1
-" if !exists('g:airline_symbols')
-"     let g:airline_symbols                 = {}
-" endif
-" let g:airline_left_sep                    = ''
-" let g:airline_left_alt_sep                = ''
-" let g:airline_right_sep                   = ''
-" let g:airline_right_alt_sep               = ''
+let g:airline_theme                       = "dracula"
+let g:airline_powerline_fonts             = 1
+let g:airline#extensions#tabline#enabled  = 1
+if !exists('g:airline_symbols')
+    let g:airline_symbols                 = {}
+endif
+let g:airline_left_sep                    = ''
+let g:airline_left_alt_sep                = ''
+let g:airline_right_sep                   = ''
+let g:airline_right_alt_sep               = ''
 
 " coc.nvim----------------------------
 " if hidden is not set, TextEdit might fail.
@@ -204,7 +203,7 @@ autocmd CursorHold  * silent call CocActionAsync('highlight')
 autocmd CursorHoldI * silent call CocActionAsync('showSignatureHelp')
 
 " Add status line support, for integration with other plugin, checkout `:h coc-status`
-set statusline^=%{coc#status()}%{get(b:,'coc_current_function','')}
+" set statusline^=%{coc#status()}%{get(b:,'coc_current_function','')}
 
 " vim-lsp-cxx-highlight--------------- 
 " 配置放在 `colorscheme` 之后
