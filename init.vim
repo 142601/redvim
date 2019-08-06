@@ -8,11 +8,13 @@
 "   \/_/ \/____/\/__,_ /`\/__/  \/_/\/_/\/_/\/_/
 "
 "   title creat from :http://www.network-science.de/ascii/
+"   ------------------------------------
 "
 "   Filetypt:     vim
 "   Repository:   https://github.com/142601/redvim
 "   License:      none
-
+"   ------------------------------------
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 " vim base config--------------------- {{{
 " base config base of vimplus
@@ -95,6 +97,7 @@ Plug 'scrooloose/nerdcommenter'
 
 " vim-markown
 Plug 'godlygeek/tabular'
+Plug 'plasticboy/vim-markdown'
 Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app & yarn install'   }
 
 " html5
@@ -108,6 +111,8 @@ Plug 'vim-airline/vim-airline-themes'
 " complete
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 Plug 'jackguo380/vim-lsp-cxx-highlight'
+
+Plug 'nathanaelkane/vim-indent-guides'
 
 call plug#end()            
 " }}}
@@ -143,10 +148,14 @@ let g:NERDSpaceDelims               = 1
 let g:NERDCompactSexyComs           = 1
 let g:NERDDefaultAlign              = 'left'
 let g:NERDAltDelims_java            = 1
-let g:NERDCustomDelimiters          = { 'c': { 'left': '/**','right': '*/' } }
+let g:NERDCustomDelimiters          = { 'c': { 'left': '/*','right': '*/' } }
 let g:NERDCommentEmptyLines         = 1
 let g:NERDTrimTrailingWhitespace    = 1
 let g:NERDToggleCheckAllLines       = 1
+
+" vim-markdown------------------------
+let g:vim_markdown_folding_disabled = 1
+let g:vim_markdown_toc_autofit      = 1
 
 " dracula-----------------------------
 let g:dracula_blod          = 1
@@ -166,47 +175,53 @@ let g:html5_microdata_attributes_complete       = 0
 let g:html5_aria_attributes_complete            = 0
 
 " airline----------------------------- 
-let g:airline_theme                       = "dracula"
-let g:airline_powerline_fonts             = 1
-let g:airline#extensions#tabline#enabled  = 1
+let g:airline_theme                         = "dracula"
+let g:airline_powerline_fonts               = 1
+let g:airline#extensions#tabline#enabled    = 1
 if !exists('g:airline_symbols')
-    let g:airline_symbols                 = {}
+    let g:airline_symbols                   = {}
 endif
-let g:airline_left_sep                    = ''
-let g:airline_left_alt_sep                = ''
-let g:airline_right_sep                   = ''
-let g:airline_right_alt_sep               = ''
+let g:airline_left_sep                      = ''
+let g:airline_left_alt_sep                  = ''
+let g:airline_right_sep                     = ''
+let g:airline_right_alt_sep                 = ''
+let g:webdevicons_enable_airline_tabline    = 1
+let g:webdevicons_enable_airline_statusline = 1
 
 " coc.nvim----------------------------
-" if hidden is not set, TextEdit might fail.
-set hidden
 
-" Some servers have issues with backup files, see #649
+set hidden
 set nobackup
 set nowritebackup
-
-" always show signcolumns
 set signcolumn=yes
-
-" Remap keys for gotos
 nmap <silent> gd <Plug>(coc-definition)
 nmap <silent> gy <Plug>(coc-type-definition)
 nmap <silent> gi <Plug>(coc-implementation)
 nmap <silent> gr <Plug>(coc-references)
-
-" Use K to show documentation in preview window
 nnoremap <silent> K :call <SID>show_documentation()<CR>
-
-" Highlight symbol under cursor on CursorHold
 set     updatetime=300
 autocmd CursorHold  * silent call CocActionAsync('highlight')
 autocmd CursorHoldI * silent call CocActionAsync('showSignatureHelp')
+    " coc-snippets
+imap <C-l> <Plug>(coc-snippets-expand)
+vmap <C-j> <Plug>(coc-snippets-select)
+" Use <C-j> for jump to next placeholder, it's default of coc.nvim
+" let g:coc_snippet_next = '<c-j>'
+" Use <C-k> for jump to previous placeholder, it's default of coc.nvim
+let g:coc_snippet_prev = '<c-k>'
+" Use <C-j> for both expand and jump (make expand higher priority.)
+imap <C-j> <Plug>(coc-snippets-expand-jump)
+inoremap <silent><expr> <TAB>
+      \ pumvisible() ? coc#_select_confirm() :
+      \ coc#expandableOrJumpable() ? "\<C-r>=coc#rpc#request('doKeymap', ['snippets-expand-jump',''])\<CR>" :
+      \ <SID>check_back_space() ? "\<TAB>" :
+      \ coc#refresh()
 
-" Add status line support, for integration with other plugin, checkout `:h coc-status`
-" set statusline^=%{coc#status()}%{get(b:,'coc_current_function','')}
-
-" vim-lsp-cxx-highlight--------------- 
-" 配置放在 `colorscheme` 之后
+function! s:check_back_space() abort
+  let col = col('.') - 1
+  return !col || getline('.')[col - 1]  =~# '\s'
+endfunction
+let g:coc_snippet_next = '<tab>'
 
 " }}}
 
@@ -239,6 +254,13 @@ hi link LspCxxHlSymParameter        Label
 hi      LspCxxHlGroupMemberVariable ctermfg=204
 hi      LspCxxHISkippedRegion       cterm=italic
 
+" vim-indent-guides-------------------
+" let g:indent_guides_enable_on_vim_startup = 1
+let g:indent_guides_start_level=1
+let g:indent_guides_guide_size=1
+hi IndentGuidesOdd  ctermbg=black
+hi IndentGuidesEven ctermbg=darkgrey
+
 " }}}
 
 " abbreviation creat----------------- {{{
@@ -263,78 +285,5 @@ inoremap jk <esc>
 " }}}
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""" 
-" vim setting for each fileype
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""" 
-
-" Vimscript file setting ------------- {{{
-augroup filetype_vim
-                            " 避免重新加载组
-    autocmd!
-                            " 设置vim脚本的折叠方式
-    autocmd FileType vim setlocal foldmethod=marker
-                            " 快速的创建新的折叠格式
-    autocmd FileType vim nnoremap <buffer> <localleader>cf :call CreatFoldFormat()<cr>
-augroup END
-
-function! CreatFoldFormat()
-    call setline(".","\" ------------------------------------ {{{")
-    call append(line("."),"\" }}}")
-    normal! ^ll
-endfunction
-" }}}
-
-" java file setting------------------- {{{
-augroup java_setting
-    autocmd!
-                            " 保存前自动编译
-"    autocmd BufWritePre *.java  exec "call  AutoComplierJava()"
-                            " 创建新的文件时创建内容
-    autocmd BufNewFile  *.java  exec "call CreatPublicClass()"
-                            " main 函数的缩写
-    autocmd FileType    java    exec "iabbrev psvm public static void main(String[] args)" 
-                            " println 的缩写
-    autocmd FileType    java    exec "iabbrev sout System.out.println" 
-augroup END
-
-" 编译java文件的函数
-function! AutoComplierJava()
-    let output = system("javac" . " " . expand("%"))
-    echom output
-endfunction
-
-" 创建文件的函数
-function! CreatPublicClass()
-    call append(1,"}")
-    call append(1,"public class " . expand("%")[:-6] . " {")
-endfunction
-" }}}
-
-" markdown setting-------------------- {{{
-augroup markdown_config
-   autocmd!                 
-   " 打开markdown文件预览
-   autocmd FileType markdown nnoremap <buffer> <localleader>ps :MarkdownPreview<cr>
-   " 关闭文件预览
-   autocmd FileType markdown nnoremap <buffer> <localleader>pe :MarkdownPreviewStop<cr>
-   " 表格自动对齐
-   autocmd FileType markdown nnoremap <buffer> <localleader>tf :TableFormat<cr>
-   " 设置自动换行
-   autocmd FileType markdown set wrap
-   " 在 'markdown' 模式下不开启行号与相对行号
-   autocmd FileType markdown set nonumber
-   autocmd FileType markdown set norelativenumber
-augroup END
-" }}}
-
-" html setting------------------------ {{{
-augroup html_setting
-    autocmd BufNewFile *.html exec "call AutoCompleteTag()"
-augroup END
-
-" 标签补全
-function! AutoCompleteTag()
-    " inoremap <html> <esc>i<html><html><esc>F<i
-    iabbrev <html> <html></html>
-endfunction
-" }}}
 " http://learnvimscriptthehardway.onefloweroneworld.com/chapters/24.html
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
