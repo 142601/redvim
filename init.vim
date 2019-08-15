@@ -31,7 +31,6 @@ set ruler                " 总是显示光标位置
 set laststatus=2         " 总是显示状态栏
 set number               " 开启行号显示
 set relativenumber       " 设置相对行号
-set cursorline           " 高亮显示当前行
 set whichwrap+=<,>,h,l   " 设置光标键跨行
 set virtualedit=block,onemore   " 允许光标出现在最后一个字符的后面
 
@@ -75,6 +74,8 @@ set fileencodings=utf-8,ucs-bom,gbk,cp936,gb2312,gb18030
 " 解决菜单乱码
 source $VIMRUNTIME/delmenu.vim
 source $VIMRUNTIME/menu.vim 
+let mapleader       = ' '
+let maplocalleader  = ","
 " }}}
 
 " vim plugins list-------------------- {{{
@@ -112,8 +113,14 @@ Plug 'vim-airline/vim-airline-themes'
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 Plug 'jackguo380/vim-lsp-cxx-highlight'
 
-Plug 'nathanaelkane/vim-indent-guides'
+" indent
+Plug 'Yggdroot/indentLine'
 
+" c tags
+Plug 'liuchengxu/vista.vim'
+
+" platfromIO
+Plug 'coddingtonbear/neomake-platformio'
 call plug#end()            
 " }}}
 
@@ -122,8 +129,7 @@ call plug#end()
 " nerdtree---------------------------- 
 let g:NERDTreeDirArrowExpandable    = '▸'
 let g:NERDTreeDirArrowCollapsible   = '▾'
-nnoremap <leader>nt :NERDTreeToggle<cr>
-inoremap <leader>nt <esc>:NERDTreeToggle<cr>
+nnoremap <leader>td :NERDTreeToggle<cr>
 
 " vim-nerdtree-syntax-highlight------- 
 let g:NERDTreeHighlightFolders          = 1 
@@ -175,7 +181,7 @@ let g:html5_microdata_attributes_complete       = 0
 let g:html5_aria_attributes_complete            = 0
 
 " airline----------------------------- 
-let g:airline_theme                         = "dracula"
+" let g:airline_theme                         = "dracula"
 let g:airline_powerline_fonts               = 1
 let g:airline#extensions#tabline#enabled    = 1
 if !exists('g:airline_symbols')
@@ -223,12 +229,25 @@ function! s:check_back_space() abort
 endfunction
 let g:coc_snippet_next = '<tab>'
 
+" vista.vim---------------------------
+let g:vista_default_executive = 'coc'
+let g:vista#renderer#enable_icon = 1
+let g:vista#renderer#icons = {
+\   "function": "\uf794",
+\   "variable": "\uf71b",
+\  }
+nnoremap <leader>tt :Vista!!<CR>
+
 " }}}
 
 " gvim font and ui-------------------- {{{
 
 " load vim default plugin
 runtime macros/matchit.vim
+
+" 如果是默认主题则不高亮显示当前行
+hi cursorline cterm=NONE guibg=Grey40
+hi colorcolumn ctermbg=NONE
 
 set background=dark
 colorscheme dracula
@@ -245,7 +264,7 @@ if has("gui_running")
     au GUIEnter * simalt ~x
 endif
 
-set cursorline
+set cursorline          " 高亮显示当前行
 
 " vim-lsp-cxx-highlight---------------
 " https://jonasjacek.github.io/colors/
@@ -254,12 +273,9 @@ hi link LspCxxHlSymParameter        Label
 hi      LspCxxHlGroupMemberVariable ctermfg=204
 hi      LspCxxHISkippedRegion       cterm=italic
 
-" vim-indent-guides-------------------
-" let g:indent_guides_enable_on_vim_startup = 1
-let g:indent_guides_start_level=1
-let g:indent_guides_guide_size=1
-hi IndentGuidesOdd  ctermbg=black
-hi IndentGuidesEven ctermbg=darkgrey
+" indentLine--------------------------
+let g:indentLine_char = '┆'
+let g:indentLine_conceallevel = 1
 
 " }}}
 
@@ -273,8 +289,6 @@ iabbrev uniqueLine ⌠≮✠♪∗≡⇔∷∷∷∷☺☻¯₌‹∈⁼⊂≤�
 " }}}
 
 " global keymapping creat------------- {{{
-let mapleader       = ' '
-let maplocalleader  = ","
 
 " 编辑vimrc文件
 nnoremap <leader>ev :edit $MYVIMRC<cr>
@@ -282,6 +296,9 @@ nnoremap <leader>ev :edit $MYVIMRC<cr>
 nnoremap <leader>sv :source $MYVIMRC<cr>
 " 插入模式快速进入正常模式
 inoremap jk <esc>
+" linux 下复制粘贴
+vnoremap <leader>ey "+y
+nnoremap <leader>ep "+p
 " }}}
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""" 
