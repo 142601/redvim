@@ -119,8 +119,6 @@ Plug 'Yggdroot/indentLine'
 " c tags
 Plug 'liuchengxu/vista.vim'
 
-" platfromIO
-Plug 'coddingtonbear/neomake-platformio'
 call plug#end()            
 " }}}
 
@@ -218,10 +216,10 @@ let g:coc_snippet_prev = '<c-k>'
 " Use <C-j> for both expand and jump (make expand higher priority.)
 imap <C-j> <Plug>(coc-snippets-expand-jump)
 inoremap <silent><expr> <TAB>
-      \ pumvisible() ? coc#_select_confirm() :
-      \ coc#expandableOrJumpable() ? "\<C-r>=coc#rpc#request('doKeymap', ['snippets-expand-jump',''])\<CR>" :
-      \ <SID>check_back_space() ? "\<TAB>" :
-      \ coc#refresh()
+            \ pumvisible() ? coc#_select_confirm() :
+            \ coc#expandableOrJumpable() ? "\<C-r>=coc#rpc#request('doKeymap', ['snippets-expand-jump',''])\<CR>" :
+            \ <SID>check_back_space() ? "\<TAB>" :
+            \ coc#refresh()
 
 function! s:check_back_space() abort
   let col = col('.') - 1
@@ -296,6 +294,10 @@ nnoremap <leader>ev :edit $MYVIMRC<cr>
 nnoremap <leader>sv :source $MYVIMRC<cr>
 " 插入模式快速进入正常模式
 inoremap jk <esc>
+" emacs keymapp
+inoremap <C-a> <esc>0i
+" inoremap <C-k> <esc>ddi
+inoremap <C-e> <esc>$a
 " linux 下复制粘贴
 vnoremap <leader>ey "+y
 nnoremap <leader>ep "+p
